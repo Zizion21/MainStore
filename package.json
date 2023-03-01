@@ -1,0 +1,20 @@
+{
+  "name": "mainstore",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zizion21/MainStore.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Zizion21/MainStore/issues"
+  },
+  "homepage": "https://github.com/Zizion21/MainStore#readme"
+}
