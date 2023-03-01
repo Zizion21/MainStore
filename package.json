@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon node index.js"
   },
   "repository": {
     "type": "git",
@@ -16,5 +16,13 @@
   "bugs": {
     "url": "https://github.com/Zizion21/MainStore/issues"
   },
-  "homepage": "https://github.com/Zizion21/MainStore#readme"
+  "homepage": "https://github.com/Zizion21/MainStore#readme",
+  "dependencies": {
+    "auto-bind": "^4.0.0",
+    "bcrypt": "^5.1.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^7.0.0",
+    "nodemon": "^2.0.20"
+  }
 }
