@@ -11,9 +11,7 @@ function SignAccessToken(userId){
     return new Promise( async(resolve, reject)=>{
         const user= await UserModel.findById(userId);
         const payload= {
-            mobile: user.mobile,
-            userID: user._id
-        }
+            mobile: user.mobile        }
         const options={
             expiresIn : "1h"
         }
