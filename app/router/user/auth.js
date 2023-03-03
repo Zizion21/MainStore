@@ -9,9 +9,9 @@ const router= require("express").Router();
  */
 /**
  * @swagger
- *  /user/login:
+ *  /user/get-otp:
  *      post:
- *          summary: LOGIN
+ *          summary: GET-OTP
  *          tags: [UserAuth]
  *          description: One Time Password Login.
  *          parameters:
@@ -33,7 +33,32 @@ const router= require("express").Router();
  *              
  */
 
-router.post("/login", UserAuthController.login);
+router.post("/get-otp", UserAuthController.getOtp);
+/**
+ * @swagger
+ *  /user/check-otp:
+ *      post:
+ *          summary: CHECK-OTP
+ *          tags: [UserAuth]
+ *          description: Checking OTP
+ *          parameters:
+ *          -   name: mobile
+ *              description: fa-IRI phone number
+ *              in: formData
+ *              required: true
+ *              type: string
+ *          -   name: code
+ *              desciption: Enter the code you recieved.
+ *              in: formData
+ *              type: string
+ *              required: true
+ *          responses:
+ *              200:
+ *                  description: Success
+ *              400:
+ *                  description: Bad request
+ */
+router.post("/check-otp", UserAuthController.checkOtp);
 module.exports={
     AuthRoutes: router
 }
