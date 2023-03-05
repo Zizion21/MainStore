@@ -59,6 +59,23 @@ router.post("/get-otp", UserAuthController.getOtp);
  *                  description: Bad request
  */
 router.post("/check-otp", UserAuthController.checkOtp);
+/**
+ * @swagger
+ *  /user/refresh-token:
+ *      post:
+ *          tags: [UserAuth]
+ *          summary: Refresh Token
+ *          description: New token and new refresh token.
+ *          parameters:
+ *              -   in: formData
+ *                  required: true
+ *                  type: string
+ *                  name: refreshToken  
+ *          responses:
+ *              200:
+ *                  description: Success
+ */
+router.post("/refresh-token", UserAuthController.refreshToken)
 module.exports={
     AuthRoutes: router
 }

@@ -19,6 +19,7 @@ module.exports= class Application{
         this.createServer(PORT);
         this.createRoutes();
         this.errorHandling();
+        this.initRedis();
     }
     configApplication(){
         this.#app.use(cors());
@@ -46,6 +47,9 @@ module.exports= class Application{
             },
             apis:["./app/router/*/*.js"]
         })))
+    }
+    initRedis(){
+        require("./utils/init_redis");
     }
     createServer(PORT){
         const http= require("http");

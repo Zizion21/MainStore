@@ -1,7 +1,7 @@
 const createError= require("http-errors");
 const { UserModel } = require("../../../../models/users");
 const { EXPIRES_IN, USER_ROLE } = require("../../../../utils/constants");
-const { randomNumberGenerator, SignAccessToken } = require("../../../../utils/functions");
+const { randomNumberGenerator, SignAccessToken, SignRefreshToken, verifyRefreshToken } = require("../../../../utils/functions");
 const { getOtpSchema, checkOtpSchema } = require("../../../validators/user/auth.schema");
 const Controller = require("../../controller");
 
@@ -34,12 +34,34 @@ class UserAuthController extends Controller{
             const now= Date.now();
             if(user.otp.expiresIn < now ) throw createError.Unauthorized("Code has been expired ⛔");
             const accessToken= await SignAccessToken(user._id);
+            //ok
+            const refreshToken= await SignRefreshToken(user._id);
             return res.json({
                 data:{
-                    accessToken
+                    accessToken,
+                    refreshToken
                 }
             })
 
+            
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async refreshToken(req, res, next){
+        try {
+            const {refreshToken}= req.body;
+            const mobile= await verifyRefreshToken(refreshToken);
+            const user= await UserModel.findOne({mobile});
+            const accessToken= await SignAccessToken(user._id);
+            const newRefreshToken= await SignRefreshToken(user._id);
+            return res.json({
+                data: {
+                    accessToken,
+                    refreshToken: newRefreshToken
+                }
+            })
             
         } catch (error) {
             next(error)
@@ -62,7 +84,7 @@ class UserAuthController extends Controller{
     async saveUser(mobile, code){
         let otp= {
             code,
-            expiresIn: EXPIRES_IN
+            expiresIn: (new Date().getTime() + 120000)
         }
         const result= await this.checkUserExistment(mobile);
         if(result) return this.updateUser(mobile, {otp})
