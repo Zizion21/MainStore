@@ -5,7 +5,7 @@ const { ACCESS_TOKEN_SECRET_KEY, REFRESH_TOKEN_SECRET_KEY } = require("./constan
 const redisClient = require("./init_redis");
 
 function randomNumberGenerator(){
-    return Math.floor((Math.random() * 90000) + 1000)
+    return Math.floor((Math.random() * 90000) + 10000)
 }
 
 function SignAccessToken(userId){

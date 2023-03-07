@@ -75,6 +75,7 @@ router.post("/check-otp", UserAuthController.checkOtp);
  *              200:
  *                  description: Success
  */
+
 router.post("/refresh-token", UserAuthController.refreshToken)
 module.exports={
     AuthRoutes: router
