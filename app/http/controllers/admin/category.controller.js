@@ -1,8 +1,8 @@
 const { CategoryModel } = require("../../../models/categories");
 const Controller = require("../controller");
 const createError= require("http-errors");
-const { addCategorySchema } = require("../../validators/admin/category.schema");
-const mongoose= require("mongoose");
+const { addCategorySchema, updateCategorySchema } = require("../../validators/admin/category.schema");
+const {mongoose}= require("mongoose");
 
 class CategoryController extends Controller{
     async addCategory(req, res, next){
@@ -78,31 +78,32 @@ class CategoryController extends Controller{
 
     async getAllCategories(req, res, next){
         try {
-            const categories= await CategoryModel.aggregate([
-                {
-                    $graphLookup:{
-                        from: "categories",
-                        startWith: "$_id",
-                        connectFromField: "_id",
-                        connectToField: "parent",
-                        maxDepth: 5,
-                        depthField: "depth",
-                        as: "children"
-                    }
-                },
-                {
-                    $project: {
-                        __v: 0,
-                        "children.__v": 0,
-                        "children.parent": 0
-                    }
-                },
-                {
-                    $match: {
-                        parent: undefined
-                    }
-                }
-            ])
+            // const categories= await CategoryModel.aggregate([
+            //     {
+            //         $graphLookup:{
+            //             from: "categories",
+            //             startWith: "$_id",
+            //             connectFromField: "_id",
+            //             connectToField: "parent",
+            //             maxDepth: 5,
+            //             depthField: "depth",
+            //             as: "children"
+            //         }
+            //     },
+            //     {
+            //         $project: {
+            //             __v: 0,
+            //             "children.__v": 0,
+            //             "children.parent": 0
+            //         }
+            //     },
+            //     {
+            //         $match: {
+            //             parent: undefined
+            //         }
+            //     }
+            // ])
+            const categories= await CategoryModel.find({parent: undefined}, {__v: 0})
             return res.status(200).json({
                 data: {
                     statusCode: 200,
@@ -154,6 +155,46 @@ class CategoryController extends Controller{
             })
         } catch (error) {
             next(error)
+        }
+    }
+
+    async getCategoriesWithoutPopulate(req, res, next){
+        try {
+            const categories= await CategoryModel.aggregate([
+                {$match: {}},
+                {
+                    $project: {
+                        __v: 0
+                    }
+                }
+            ])
+            return res.status(200).json({
+                data: {
+                    statusCode: 200,
+                    categories
+                }
+            })
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async editCategoryTitle(req, res, next){
+        try {
+            const {id}= req.params;
+            const {title}= req.body;
+            const category= await this.checkCategoryExistment(id);
+            await updateCategorySchema.validateAsync(req.body);
+            const updateResult= await CategoryModel.updateOne({_id: id}, {$set: {title}});
+            if(updateResult.modifiedCount == 0) throw createError.InternalServerError("Failed to update the category. Please try again.")
+            return res.status(200).json({
+                data: {
+                    statusCode: 200,
+                    message: "Category updated successfully✔️"
+                }
+            })
+        } catch (error) {
+            next(error);
         }
     }
 }
